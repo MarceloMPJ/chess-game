@@ -1,5 +1,7 @@
 package main
 
+import "github.com/MarceloMPJ/chess-game/pkg/game"
+
 func main() {
-	println("oi")
+	println(game.Debug())
 }

@@ -1,5 +1,7 @@
 package knight
 
+import "github.com/MarceloMPJ/chess-game/libs/values"
+
 type Knight struct {
 	color int
 }
@@ -9,7 +11,7 @@ func NewKnight(color int) Knight {
 }
 
 func (n *Knight) Show() rune {
-	if n.color == 0 {
+	if n.color == values.White {
 		return '♞'
 	}
 

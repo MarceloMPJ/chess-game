@@ -1,5 +1,7 @@
 package rook
 
+import "github.com/MarceloMPJ/chess-game/libs/values"
+
 type Rook struct {
 	color int
 }
@@ -9,7 +11,7 @@ func NewRook(color int) Rook {
 }
 
 func (r *Rook) Show() rune {
-	if r.color == 0 {
+	if r.color == values.White {
 		return '♜'
 	}
 

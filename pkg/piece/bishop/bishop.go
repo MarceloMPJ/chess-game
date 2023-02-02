@@ -1,5 +1,7 @@
 package bishop
 
+import "github.com/MarceloMPJ/chess-game/libs/values"
+
 type Bishop struct {
 	color int
 }
@@ -9,7 +11,7 @@ func NewBishop(color int) Bishop {
 }
 
 func (b *Bishop) Show() rune {
-	if b.color == 0 {
+	if b.color == values.White {
 		return '♝'
 	}
 

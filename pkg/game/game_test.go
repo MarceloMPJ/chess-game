@@ -3,7 +3,7 @@ package game_test
 import (
 	"testing"
 
-	"github.com/MarceloMPJ/chess-game/src/game"
+	"github.com/MarceloMPJ/chess-game/pkg/game"
 )
 
 func TestGame_Debug(t *testing.T) {

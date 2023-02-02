@@ -1,5 +1,7 @@
 package queen
 
+import "github.com/MarceloMPJ/chess-game/libs/values"
+
 type Queen struct {
 	color int
 }
@@ -9,7 +11,7 @@ func NewQueen(color int) Queen {
 }
 
 func (q *Queen) Show() rune {
-	if q.color == 0 {
+	if q.color == values.White {
 		return '♛'
 	}
 

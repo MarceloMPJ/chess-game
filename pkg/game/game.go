@@ -1,6 +1,6 @@
 package game
 
-import "github.com/MarceloMPJ/chess-game/src/table"
+import "github.com/MarceloMPJ/chess-game/pkg/table"
 
 func Debug() string {
 	table := table.NewTable()
