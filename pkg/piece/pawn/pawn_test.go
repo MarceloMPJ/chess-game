@@ -32,109 +32,121 @@ func TestPawn_Show(t *testing.T) {
 }
 
 func TestPawn_IsValidMove(t *testing.T) {
-	t.Run("when color is white", func(t *testing.T) {
-		p := pawn.NewPawn(values.White)
+	type params struct {
+		origin values.Coord
+		dest   values.Coord
+	}
 
-		t.Run("when the move is valid", func(t *testing.T) {
-			expected := true
+	type context struct {
+		context  string
+		expected bool
+		args     []params
+	}
 
-			result := p.IsValidMove(
-				values.Coord{X: 7, Y: 7},
-				values.Coord{X: 7, Y: 6},
-			)
-			if result != expected {
-				t.Errorf("result: %t, expected: %t", result, expected)
-			}
+	type contextColor struct {
+		contextColor string
+		color        int
+		contexts     []context
+	}
 
-			result = p.IsValidMove(
-				values.Coord{X: 7, Y: 7},
-				values.Coord{X: 7, Y: 5},
-			)
+	tests := []contextColor{
+		{
+			contextColor: "when color is white",
+			color:        values.White,
+			contexts: []context{
+				{
+					context:  "when the move is valid",
+					expected: true,
+					args: []params{
+						{
+							values.Coord{X: 7, Y: 7},
+							values.Coord{X: 7, Y: 6},
+						},
+						{
+							values.Coord{X: 7, Y: 7},
+							values.Coord{X: 7, Y: 5},
+						},
+					},
+				},
+				{
+					context:  "when the move is invalid",
+					expected: false,
+					args: []params{
+						{
+							values.Coord{X: 7, Y: 7},
+							values.Coord{X: 6, Y: 6},
+						},
+						{
+							values.Coord{X: 7, Y: 7},
+							values.Coord{X: 7, Y: 4},
+						},
+						{
+							values.Coord{X: 6, Y: 6},
+							values.Coord{X: 6, Y: 7},
+						},
+					},
+				},
+			},
+		},
+		{
+			contextColor: "when color is black",
+			color:        values.Black,
+			contexts: []context{
+				{
+					context:  "when the move is valid",
+					expected: true,
+					args: []params{
+						{
+							values.Coord{X: 7, Y: 6},
+							values.Coord{X: 7, Y: 7},
+						},
+						{
+							values.Coord{X: 7, Y: 5},
+							values.Coord{X: 7, Y: 7},
+						},
+					},
+				},
+				{
+					context:  "when the move is invalid",
+					expected: false,
+					args: []params{
+						{
+							values.Coord{X: 6, Y: 6},
+							values.Coord{X: 7, Y: 7},
+						},
+						{
+							values.Coord{X: 7, Y: 4},
+							values.Coord{X: 7, Y: 7},
+						},
+						{
+							values.Coord{X: 6, Y: 7},
+							values.Coord{X: 6, Y: 6},
+						},
+					},
+				},
+			},
+		},
+	}
 
-			if result != expected {
-				t.Errorf("result: %t, expected: %t", result, expected)
+	for _, test := range tests {
+		t.Run(test.contextColor, func(t *testing.T) {
+			p := pawn.NewPawn(test.color)
+
+			for _, testContext := range test.contexts {
+				t.Run(testContext.context, func(t *testing.T) {
+					for _, arg := range testContext.args {
+						result := p.IsValidMove(arg.origin, arg.dest)
+
+						checkResult(t, result, testContext.expected)
+					}
+				})
 			}
 		})
+	}
+}
 
-		t.Run("when the move is invalid", func(t *testing.T) {
-			expected := false
-
-			result := p.IsValidMove(
-				values.Coord{X: 7, Y: 7},
-				values.Coord{X: 6, Y: 6},
-			)
-			if result != expected {
-				t.Errorf("result: %t, expected: %t", result, expected)
-			}
-
-			result = p.IsValidMove(
-				values.Coord{X: 7, Y: 7},
-				values.Coord{X: 7, Y: 4},
-			)
-			if result != expected {
-				t.Errorf("result: %t, expected: %t", result, expected)
-			}
-
-			result = p.IsValidMove(
-				values.Coord{X: 6, Y: 6},
-				values.Coord{X: 6, Y: 7},
-			)
-			if result != expected {
-				t.Errorf("result: %t, expected: %t", result, expected)
-			}
-		})
-	})
-
-	t.Run("when color is black", func(t *testing.T) {
-		p := pawn.NewPawn(values.Black)
-
-		t.Run("when the move is valid", func(t *testing.T) {
-			expected := true
-
-			result := p.IsValidMove(
-				values.Coord{X: 7, Y: 6},
-				values.Coord{X: 7, Y: 7},
-			)
-			if result != expected {
-				t.Errorf("result: %t, expected: %t", result, expected)
-			}
-
-			result = p.IsValidMove(
-				values.Coord{X: 7, Y: 5},
-				values.Coord{X: 7, Y: 7},
-			)
-
-			if result != expected {
-				t.Errorf("result: %t, expected: %t", result, expected)
-			}
-		})
-
-		t.Run("when the move is invalid", func(t *testing.T) {
-			expected := false
-
-			result := p.IsValidMove(
-				values.Coord{X: 6, Y: 6},
-				values.Coord{X: 7, Y: 7},
-			)
-			if result != expected {
-				t.Errorf("result: %t, expected: %t", result, expected)
-			}
-
-			result = p.IsValidMove(
-				values.Coord{X: 7, Y: 4},
-				values.Coord{X: 7, Y: 7},
-			)
-			if result != expected {
-				t.Errorf("result: %t, expected: %t", result, expected)
-			}
-
-			result = p.IsValidMove(
-				values.Coord{X: 6, Y: 7},
-				values.Coord{X: 6, Y: 6},
-			)
-			if result != expected {
-				t.Errorf("result: %t, expected: %t", result, expected)
-			}
-		})
-	})
+func checkResult(t *testing.T, result, expected bool) {
+	if result != expected {
+		t.Errorf("result: %t, expected: %t", result, expected)
+	}
 }
