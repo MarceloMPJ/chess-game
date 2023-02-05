@@ -17,3 +17,15 @@ func (n *Knight) Show() rune {
 
 	return '♘'
 }
+
+func (n *Knight) IsValidMove(origin, dest values.Coord) bool {
+	if (origin.X-2 == dest.X || origin.X+2 == dest.X) && (origin.Y-1 == dest.Y || origin.Y+1 == dest.Y) {
+		return true
+	}
+
+	if (origin.Y-2 == dest.Y || origin.Y+2 == dest.Y) && (origin.X-1 == dest.X || origin.X+1 == dest.X) {
+		return true
+	}
+
+	return false
+}
