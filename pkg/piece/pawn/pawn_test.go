@@ -146,6 +146,8 @@ func TestPawn_IsValidMove(t *testing.T) {
 }
 
 func checkResult(t *testing.T, result, expected bool) {
+	t.Helper()
+
 	if result != expected {
 		t.Errorf("result: %t, expected: %t", result, expected)
 	}
