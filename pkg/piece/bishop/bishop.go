@@ -24,11 +24,3 @@ func (b *Bishop) Show() rune {
 func (b *Bishop) IsValidMove(origin, dest values.Coord) bool {
 	return basic.Abs(int(origin.X)-int(dest.X)) == basic.Abs(int(origin.Y)-int(dest.Y))
 }
-
-func abs(num int) int {
-	if num < 0 {
-		return -num
-	}
-
-	return num
-}

@@ -1,6 +1,9 @@
 package queen
 
-import "github.com/MarceloMPJ/chess-game/libs/values"
+import (
+	"github.com/MarceloMPJ/chess-game/libs/basic"
+	"github.com/MarceloMPJ/chess-game/libs/values"
+)
 
 type Queen struct {
 	color int
@@ -16,4 +19,9 @@ func (q *Queen) Show() rune {
 	}
 
 	return '♕'
+}
+
+func (b *Queen) IsValidMove(origin, dest values.Coord) bool {
+	return basic.Abs(int(origin.X)-int(dest.X)) == basic.Abs(int(origin.Y)-int(dest.Y)) ||
+		(origin.X == dest.X || origin.Y == dest.Y)
 }
