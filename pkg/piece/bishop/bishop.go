@@ -1,6 +1,7 @@
 package bishop
 
 import (
+	"github.com/MarceloMPJ/chess-game/libs/basic"
 	"github.com/MarceloMPJ/chess-game/libs/values"
 )
 
@@ -21,7 +22,7 @@ func (b *Bishop) Show() rune {
 }
 
 func (b *Bishop) IsValidMove(origin, dest values.Coord) bool {
-	return abs(int(origin.X)-int(dest.X)) == abs(int(origin.Y)-int(dest.Y))
+	return basic.Abs(int(origin.X)-int(dest.X)) == basic.Abs(int(origin.Y)-int(dest.Y))
 }
 
 func abs(num int) int {
