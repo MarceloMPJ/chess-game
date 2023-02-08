@@ -1,4 +1,4 @@
-package table
+package board
 
 import (
 	"github.com/MarceloMPJ/chess-game/libs/values"
@@ -11,11 +11,11 @@ import (
 	"github.com/MarceloMPJ/chess-game/pkg/piece/rook"
 )
 
-type Table struct {
+type Board struct {
 	rows [8][8]piece.PieceContract
 }
 
-func NewTable() Table {
+func NewBoard() Board {
 	var rows [8][8]piece.PieceContract
 
 	// Rooks
@@ -74,16 +74,16 @@ func NewTable() Table {
 		rows[1][i] = &pawnBlack
 	}
 
-	return Table{rows: rows}
+	return Board{rows: rows}
 }
 
-func (t *Table) Debug() (result string) {
+func (b *Board) Debug() (result string) {
 	for i := 0; i < 8; i++ {
 		line := ""
 
 		for j := 0; j < 8; j++ {
-			if t.rows[i][j] != nil {
-				line += string(t.rows[i][j].Show())
+			if b.rows[i][j] != nil {
+				line += string(b.rows[i][j].Show())
 			} else {
 				line += " "
 			}

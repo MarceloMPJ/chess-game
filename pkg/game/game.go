@@ -1,9 +1,9 @@
 package game
 
-import "github.com/MarceloMPJ/chess-game/pkg/table"
+import "github.com/MarceloMPJ/chess-game/pkg/board"
 
 func Debug() string {
-	table := table.NewTable()
+	board := board.NewBoard()
 
-	return table.Debug()
+	return board.Debug()
 }
