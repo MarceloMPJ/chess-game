@@ -9,10 +9,10 @@ import (
 
 func TestRook_Show(t *testing.T) {
 	t.Run("when color is white", func(t *testing.T) {
-		p := rook.NewRook(values.White)
+		r := rook.NewRook(values.White)
 
 		expected := '♜'
-		result := p.Show()
+		result := r.Show()
 
 		if result != expected {
 			t.Errorf("result: %c, expected: %c", result, expected)
@@ -20,10 +20,34 @@ func TestRook_Show(t *testing.T) {
 	})
 
 	t.Run("when color is black", func(t *testing.T) {
-		p := rook.NewRook(values.Black)
+		r := rook.NewRook(values.Black)
 
 		expected := '♖'
-		result := p.Show()
+		result := r.Show()
+
+		if result != expected {
+			t.Errorf("result: %c, expected: %c", result, expected)
+		}
+	})
+}
+
+func TestRook_ShowFEN(t *testing.T) {
+	t.Run("when color is white", func(t *testing.T) {
+		r := rook.NewRook(values.White)
+
+		expected := 'R'
+		result := r.ShowFEN()
+
+		if result != expected {
+			t.Errorf("result: %c, expected: %c", result, expected)
+		}
+	})
+
+	t.Run("when color is black", func(t *testing.T) {
+		r := rook.NewRook(values.Black)
+
+		expected := 'r'
+		result := r.ShowFEN()
 
 		if result != expected {
 			t.Errorf("result: %c, expected: %c", result, expected)

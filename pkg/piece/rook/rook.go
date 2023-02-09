@@ -18,6 +18,14 @@ func (r *Rook) Show() rune {
 	return '♖'
 }
 
+func (r *Rook) ShowFEN() rune {
+	if r.color == values.White {
+		return 'R'
+	}
+
+	return 'r'
+}
+
 func (r *Rook) IsValidMove(origin, dest values.Coord) bool {
 	return origin.X == dest.X || origin.Y == dest.Y
 }
