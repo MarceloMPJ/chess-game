@@ -21,6 +21,14 @@ func (q *Queen) Show() rune {
 	return '♕'
 }
 
+func (q *Queen) ShowFEN() rune {
+	if q.color == values.White {
+		return 'Q'
+	}
+
+	return 'q'
+}
+
 func (b *Queen) IsValidMove(origin, dest values.Coord) bool {
 	return basic.Abs(int(origin.X)-int(dest.X)) == basic.Abs(int(origin.Y)-int(dest.Y)) ||
 		(origin.X == dest.X || origin.Y == dest.Y)

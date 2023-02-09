@@ -31,6 +31,30 @@ func TestQueen_Show(t *testing.T) {
 	})
 }
 
+func TestQueen_ShowFEN(t *testing.T) {
+	t.Run("when color is white", func(t *testing.T) {
+		q := queen.NewQueen(values.White)
+
+		expected := 'Q'
+		result := q.ShowFEN()
+
+		if result != expected {
+			t.Errorf("result: %c, expected: %c", result, expected)
+		}
+	})
+
+	t.Run("when color is black", func(t *testing.T) {
+		q := queen.NewQueen(values.Black)
+
+		expected := 'q'
+		result := q.ShowFEN()
+
+		if result != expected {
+			t.Errorf("result: %c, expected: %c", result, expected)
+		}
+	})
+}
+
 func TestQueen_IsValidMove(t *testing.T) {
 	type params struct {
 		origin values.Coord
