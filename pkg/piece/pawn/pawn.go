@@ -18,6 +18,14 @@ func (p *Pawn) Show() rune {
 	return '♙'
 }
 
+func (p *Pawn) ShowFEN() rune {
+	if p.color == values.White {
+		return 'P'
+	}
+
+	return 'p'
+}
+
 func (p *Pawn) IsValidMove(origin, dest values.Coord) bool {
 	if origin.X != dest.X {
 		return false

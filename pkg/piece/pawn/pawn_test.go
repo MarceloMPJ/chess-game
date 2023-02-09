@@ -31,6 +31,30 @@ func TestPawn_Show(t *testing.T) {
 	})
 }
 
+func TestPawn_ShowFEN(t *testing.T) {
+	t.Run("when color is white", func(t *testing.T) {
+		p := pawn.NewPawn(values.White)
+
+		expected := 'P'
+		result := p.ShowFEN()
+
+		if result != expected {
+			t.Errorf("result: %c, expected: %c", result, expected)
+		}
+	})
+
+	t.Run("when color is black", func(t *testing.T) {
+		p := pawn.NewPawn(values.Black)
+
+		expected := 'p'
+		result := p.ShowFEN()
+
+		if result != expected {
+			t.Errorf("result: %c, expected: %c", result, expected)
+		}
+	})
+}
+
 func TestPawn_IsValidMove(t *testing.T) {
 	type params struct {
 		origin values.Coord
