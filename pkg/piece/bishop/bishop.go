@@ -21,6 +21,14 @@ func (b *Bishop) Show() rune {
 	return '♗'
 }
 
+func (b *Bishop) ShowFEN() rune {
+	if b.color == values.White {
+		return 'B'
+	}
+
+	return 'b'
+}
+
 func (b *Bishop) IsValidMove(origin, dest values.Coord) bool {
 	return basic.Abs(int(origin.X)-int(dest.X)) == basic.Abs(int(origin.Y)-int(dest.Y))
 }

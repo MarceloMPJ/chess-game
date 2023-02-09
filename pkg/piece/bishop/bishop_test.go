@@ -31,6 +31,30 @@ func TestBishop_Show(t *testing.T) {
 	})
 }
 
+func TestBishop_ShowFEN(t *testing.T) {
+	t.Run("when color is white", func(t *testing.T) {
+		b := bishop.NewBishop(values.White)
+
+		expected := 'B'
+		result := b.ShowFEN()
+
+		if result != expected {
+			t.Errorf("result: %c, expected: %c", result, expected)
+		}
+	})
+
+	t.Run("when color is black", func(t *testing.T) {
+		b := bishop.NewBishop(values.Black)
+
+		expected := 'b'
+		result := b.ShowFEN()
+
+		if result != expected {
+			t.Errorf("result: %c, expected: %c", result, expected)
+		}
+	})
+}
+
 func TestBishop_IsValidMove(t *testing.T) {
 	type params struct {
 		origin values.Coord
