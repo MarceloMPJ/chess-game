@@ -7,14 +7,14 @@ import (
 )
 
 func TestGame_Debug(t *testing.T) {
-	expected := `♖ ♘ ♗ ♔ ♕ ♗ ♘ ♖
+	expected := `♖ ♘ ♗ ♕ ♔ ♗ ♘ ♖
 ♙ ♙ ♙ ♙ ♙ ♙ ♙ ♙
                
                
                
                
 ♟ ♟ ♟ ♟ ♟ ♟ ♟ ♟
-♜ ♞ ♝ ♚ ♛ ♝ ♞ ♜
+♜ ♞ ♝ ♛ ♚ ♝ ♞ ♜
 `
 	result := game.Debug()
 

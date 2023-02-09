@@ -11,11 +11,20 @@ import (
 	"github.com/MarceloMPJ/chess-game/pkg/piece/rook"
 )
 
+const (
+	GraphicalMode = iota
+	FenMode
+)
+
 type Board struct {
 	rows [8][8]piece.PieceContract
 }
 
 func NewBoard() Board {
+	return Board{}
+}
+
+func (b *Board) Start() {
 	var rows [8][8]piece.PieceContract
 
 	// Rooks
@@ -48,8 +57,8 @@ func NewBoard() Board {
 		&rookBlackL,
 		&knightBlackL,
 		&bishopBlackL,
-		&kingBlack,
 		&queenBlack,
+		&kingBlack,
 		&bishopBlackR,
 		&knightBlackR,
 		&rookBlackR,
@@ -59,8 +68,8 @@ func NewBoard() Board {
 		&rookWhiteL,
 		&knightWhiteL,
 		&bishopWhiteL,
-		&kingWhite,
 		&queenWhite,
+		&kingWhite,
 		&bishopWhiteR,
 		&knightWhiteR,
 		&rookWhiteR,
@@ -74,26 +83,18 @@ func NewBoard() Board {
 		rows[1][i] = &pawnBlack
 	}
 
-	return Board{rows: rows}
+	b.rows = rows
 }
 
-func (b *Board) Debug() (result string) {
-	for i := 0; i < 8; i++ {
-		line := ""
+func (b *Board) Move(origin, dest values.Coord) bool {
+	p := b.rows[origin.Y][origin.X]
 
-		for j := 0; j < 8; j++ {
-			if b.rows[i][j] != nil {
-				line += string(b.rows[i][j].Show())
-			} else {
-				line += " "
-			}
+	if p.IsValidMove(origin, dest) {
+		b.rows[origin.Y][origin.X] = nil
+		b.rows[dest.Y][dest.X] = p
 
-			if j != 7 {
-				line += " "
-			}
-		}
-		result += line + "\n"
+		return true
 	}
 
-	return
+	return false
 }

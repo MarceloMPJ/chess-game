@@ -3,7 +3,8 @@ package game
 import "github.com/MarceloMPJ/chess-game/pkg/board"
 
 func Debug() string {
-	board := board.NewBoard()
+	b := board.NewBoard()
+	b.Start()
 
-	return board.Debug()
+	return b.Debug(board.GraphicalMode)
 }
