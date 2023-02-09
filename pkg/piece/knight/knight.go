@@ -18,6 +18,14 @@ func (n *Knight) Show() rune {
 	return '♘'
 }
 
+func (n *Knight) ShowFEN() rune {
+	if n.color == values.White {
+		return 'N'
+	}
+
+	return 'n'
+}
+
 func (n *Knight) IsValidMove(origin, dest values.Coord) bool {
 	if (origin.X-2 == dest.X || origin.X+2 == dest.X) && (origin.Y-1 == dest.Y || origin.Y+1 == dest.Y) {
 		return true

@@ -9,10 +9,10 @@ import (
 
 func TestKnight_Show(t *testing.T) {
 	t.Run("when color is white", func(t *testing.T) {
-		p := knight.NewKnight(values.White)
+		n := knight.NewKnight(values.White)
 
 		expected := '♞'
-		result := p.Show()
+		result := n.Show()
 
 		if result != expected {
 			t.Errorf("result: %c, expected: %c", result, expected)
@@ -20,10 +20,34 @@ func TestKnight_Show(t *testing.T) {
 	})
 
 	t.Run("when color is black", func(t *testing.T) {
-		p := knight.NewKnight(values.Black)
+		n := knight.NewKnight(values.Black)
 
 		expected := '♘'
-		result := p.Show()
+		result := n.Show()
+
+		if result != expected {
+			t.Errorf("result: %c, expected: %c", result, expected)
+		}
+	})
+}
+
+func TestKnight_ShowFEN(t *testing.T) {
+	t.Run("when color is white", func(t *testing.T) {
+		n := knight.NewKnight(values.White)
+
+		expected := 'N'
+		result := n.ShowFEN()
+
+		if result != expected {
+			t.Errorf("result: %c, expected: %c", result, expected)
+		}
+	})
+
+	t.Run("when color is black", func(t *testing.T) {
+		n := knight.NewKnight(values.Black)
+
+		expected := 'n'
+		result := n.ShowFEN()
 
 		if result != expected {
 			t.Errorf("result: %c, expected: %c", result, expected)
