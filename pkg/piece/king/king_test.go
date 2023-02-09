@@ -31,6 +31,30 @@ func TestKing_Show(t *testing.T) {
 	})
 }
 
+func TestKing_ShowFEN(t *testing.T) {
+	t.Run("when color is white", func(t *testing.T) {
+		k := king.NewKing(values.White)
+
+		expected := 'K'
+		result := k.ShowFEN()
+
+		if result != expected {
+			t.Errorf("result: %c, expected: %c", result, expected)
+		}
+	})
+
+	t.Run("when color is black", func(t *testing.T) {
+		k := king.NewKing(values.Black)
+
+		expected := 'k'
+		result := k.ShowFEN()
+
+		if result != expected {
+			t.Errorf("result: %c, expected: %c", result, expected)
+		}
+	})
+}
+
 func TestKing_IsValidMove(t *testing.T) {
 	type params struct {
 		origin values.Coord

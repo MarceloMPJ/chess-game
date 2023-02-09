@@ -18,6 +18,14 @@ func (k *King) Show() rune {
 	return '♔'
 }
 
+func (k *King) ShowFEN() rune {
+	if k.color == values.White {
+		return 'K'
+	}
+
+	return 'k'
+}
+
 func (k *King) IsValidMove(origin, dest values.Coord) bool {
 	return (origin.X-dest.X <= 1 || dest.X-origin.X <= 1) &&
 		(origin.Y-dest.Y <= 1 || dest.Y-origin.Y <= 1)
