@@ -1,6 +1,7 @@
 package board
 
 import (
+	"github.com/MarceloMPJ/chess-game/libs/basic"
 	"github.com/MarceloMPJ/chess-game/libs/values"
 	"github.com/MarceloMPJ/chess-game/pkg/piece"
 	"github.com/MarceloMPJ/chess-game/pkg/piece/bishop"
@@ -89,7 +90,7 @@ func (b *Board) Start() {
 func (b *Board) Move(origin, dest values.Coord) bool {
 	p := b.rows[origin.Y][origin.X]
 
-	if p.IsValidMove(origin, dest) {
+	if (b.isKnight(origin) || b.isFreePath(origin, dest)) && p.IsValidMove(origin, dest) {
 		b.rows[origin.Y][origin.X] = nil
 		b.rows[dest.Y][dest.X] = p
 
@@ -97,4 +98,65 @@ func (b *Board) Move(origin, dest values.Coord) bool {
 	}
 
 	return false
+}
+
+func (b *Board) isFreePath(origin, dest values.Coord) bool {
+	// When the path is horizontal or vertical
+	if origin.X == dest.X || origin.Y == dest.Y {
+		startX, startY := basic.MinUint8(origin.X, dest.X), basic.MinUint8(origin.Y, dest.Y)
+		finishX, finishY := basic.MaxUint8(origin.X, dest.X), basic.MaxUint8(origin.Y, dest.Y)
+
+		for i := startY; i <= finishY; i++ {
+			for j := startX; j <= finishX; j++ {
+				if origin.Y == i && origin.X == j {
+					continue
+				}
+
+				if b.hasPiece(i, j) {
+					return false
+				}
+			}
+		}
+	} else {
+		// When the path is horizontal
+		for i, j := origin.Y, origin.X; i != dest.Y && j != dest.X; i, j = nextStep(i, j, dest) {
+			if origin.Y == i && origin.X == j {
+				continue
+			}
+
+			if b.hasPiece(i, j) {
+				return false
+			}
+		}
+	}
+
+	return true
+}
+
+func (b *Board) isKnight(origin values.Coord) bool {
+	fen := b.rows[origin.Y][origin.X].ShowFEN()
+
+	return fen == 'n' || fen == 'N'
+}
+
+func (b *Board) hasPiece(y, x uint8) bool {
+	return b.rows[y][x] != nil
+}
+
+func nextStep(i, j uint8, dest values.Coord) (uint8, uint8) {
+	var nextY, nextX uint8
+
+	if i < dest.Y {
+		nextY = i + 1
+	} else {
+		nextY = i - 1
+	}
+
+	if j < dest.X {
+		nextX = j + 1
+	} else {
+		nextX = j - 1
+	}
+
+	return nextY, nextX
 }
