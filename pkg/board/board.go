@@ -12,11 +12,6 @@ import (
 	"github.com/MarceloMPJ/chess-game/pkg/piece/rook"
 )
 
-const (
-	GraphicalMode = iota
-	FenMode
-)
-
 type Board struct {
 	rows         [8][8]piece.PieceContract
 	currentColor int

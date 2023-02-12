@@ -2,6 +2,11 @@ package board
 
 import "fmt"
 
+const (
+	GraphicalMode = iota
+	FenMode
+)
+
 func (b *Board) Debug(mode int) string {
 	switch mode {
 	case GraphicalMode:
