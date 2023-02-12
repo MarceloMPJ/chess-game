@@ -18,7 +18,8 @@ const (
 )
 
 type Board struct {
-	rows [8][8]piece.PieceContract
+	rows         [8][8]piece.PieceContract
+	currentColor int
 }
 
 func NewBoard() Board {
@@ -84,15 +85,17 @@ func (b *Board) Start() {
 		rows[1][i] = &pawnBlack
 	}
 
+	b.currentColor = values.White
 	b.rows = rows
 }
 
 func (b *Board) Move(origin, dest values.Coord) bool {
 	p := b.rows[origin.Y][origin.X]
 
-	if (b.isKnight(origin) || b.isFreePath(origin, dest)) && p.IsValidMove(origin, dest) {
+	if b.allowMove(origin, dest, p) {
 		b.rows[origin.Y][origin.X] = nil
 		b.rows[dest.Y][dest.X] = p
+		b.nextTurn()
 
 		return true
 	}
@@ -100,7 +103,29 @@ func (b *Board) Move(origin, dest values.Coord) bool {
 	return false
 }
 
-func (b *Board) isFreePath(origin, dest values.Coord) bool {
+func (b *Board) nextTurn() {
+	if b.currentColor == values.White {
+		b.currentColor = values.Black
+
+		return
+	}
+
+	b.currentColor = values.White
+}
+
+func (b *Board) allowMove(origin, dest values.Coord, p piece.PieceContract) bool {
+	return b.isCorrectTurn(origin) && p.IsValidMove(origin, dest) && b.isFreePath(origin, dest, p)
+}
+
+func (b *Board) isCorrectTurn(origin values.Coord) bool {
+	return b.currentColor == b.pieceColor(origin)
+}
+
+func (b *Board) isFreePath(origin, dest values.Coord, p piece.PieceContract) bool {
+	if b.isKnight(origin) {
+		return true
+	}
+
 	// When the path is horizontal or vertical
 	if origin.X == dest.X || origin.Y == dest.Y {
 		startX, startY := basic.MinUint8(origin.X, dest.X), basic.MinUint8(origin.Y, dest.Y)
@@ -159,4 +184,14 @@ func nextStep(i, j uint8, dest values.Coord) (uint8, uint8) {
 	}
 
 	return nextY, nextX
+}
+
+func (b *Board) pieceColor(origin values.Coord) int {
+	fen := b.rows[origin.Y][origin.X].ShowFEN()
+
+	if fen < 'Z' {
+		return values.White
+	}
+
+	return values.Black
 }

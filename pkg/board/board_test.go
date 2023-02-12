@@ -1,6 +1,7 @@
 package board_test
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/MarceloMPJ/chess-game/libs/values"
@@ -47,46 +48,97 @@ func TestBoard_Move(t *testing.T) {
 		b.Start()
 
 		// Moves pawn on initial board
-		resultBool := b.Move(values.Coord{X: 3, Y: 6}, values.Coord{X: 3, Y: 5})
+		t.Run("when moves pawn white on initial board", func(t *testing.T) {
+			resultBool := b.Move(values.Coord{X: 3, Y: 6}, values.Coord{X: 3, Y: 5})
 
-		if resultBool != expectedBool {
-			t.Errorf("result: %t, expected: %t", resultBool, expectedBool)
-		}
+			if resultBool != expectedBool {
+				t.Errorf("result: %t, expected: %t", resultBool, expectedBool)
+			}
 
-		expected := "rnbqkbnr/pppppppp/8/8/8/3P4/PPP1PPPP/RNBQKBNR"
-		result := b.Debug(board.FenMode)
+			expected := "rnbqkbnr/pppppppp/8/8/8/3P4/PPP1PPPP/RNBQKBNR"
+			result := b.Debug(board.FenMode)
 
-		if result != expected {
-			t.Errorf("result: %s, expected: %s", result, expected)
-		}
+			if result != expected {
+				t.Errorf("result: %s, expected: %s", result, expected)
+			}
+		})
 
-		// Moves bishop
-		resultBool = b.Move(values.Coord{X: 2, Y: 7}, values.Coord{X: 6, Y: 3})
+		t.Run("when moves pawn black", func(t *testing.T) {
+			resultBool := b.Move(values.Coord{X: 3, Y: 1}, values.Coord{X: 3, Y: 2})
 
-		if resultBool != expectedBool {
-			t.Errorf("result: %t, expected: %t", resultBool, expectedBool)
-		}
+			if resultBool != expectedBool {
+				t.Errorf("result: %t, expected: %t", resultBool, expectedBool)
+			}
 
-		expected = "rnbqkbnr/pppppppp/8/6B1/8/3P4/PPP1PPPP/RN1QKBNR"
-		result = b.Debug(board.FenMode)
+			expected := "rnbqkbnr/ppp1pppp/3p4/8/8/3P4/PPP1PPPP/RNBQKBNR"
+			result := b.Debug(board.FenMode)
 
-		if result != expected {
-			t.Errorf("result: %s, expected: %s", result, expected)
-		}
+			if result != expected {
+				t.Errorf("result: %s, expected: %s", result, expected)
+			}
+		})
 
-		// Moves knight
-		resultBool = b.Move(values.Coord{X: 6, Y: 7}, values.Coord{X: 5, Y: 5})
+		t.Run("when moves bishop white", func(t *testing.T) {
+			resultBool := b.Move(values.Coord{X: 2, Y: 7}, values.Coord{X: 6, Y: 3})
 
-		if resultBool != expectedBool {
-			t.Errorf("result: %t, expected: %t", resultBool, expectedBool)
-		}
+			if resultBool != expectedBool {
+				t.Errorf("result: %t, expected: %t", resultBool, expectedBool)
+			}
 
-		expected = "rnbqkbnr/pppppppp/8/6B1/8/3P1N2/PPP1PPPP/RN1QKB1R"
-		result = b.Debug(board.FenMode)
+			expected := "rnbqkbnr/ppp1pppp/3p4/6B1/8/3P4/PPP1PPPP/RN1QKBNR"
+			result := b.Debug(board.FenMode)
 
-		if result != expected {
-			t.Errorf("result: %s, expected: %s", result, expected)
-		}
+			if result != expected {
+				t.Errorf("result: %s, expected: %s", result, expected)
+			}
+		})
+
+		t.Run("when moves bishop black", func(t *testing.T) {
+			resultBool := b.Move(values.Coord{X: 2, Y: 0}, values.Coord{X: 6, Y: 4})
+
+			if resultBool != expectedBool {
+				t.Errorf("result: %t, expected: %t", resultBool, expectedBool)
+			}
+
+			expected := "rn1qkbnr/ppp1pppp/3p4/6B1/6b1/3P4/PPP1PPPP/RN1QKBNR"
+			result := b.Debug(board.FenMode)
+
+			if result != expected {
+				t.Errorf("result: %s, expected: %s", result, expected)
+			}
+		})
+
+		t.Run("whem moves knight white", func(t *testing.T) {
+			resultBool := b.Move(values.Coord{X: 6, Y: 7}, values.Coord{X: 5, Y: 5})
+
+			if resultBool != expectedBool {
+				t.Errorf("result: %t, expected: %t", resultBool, expectedBool)
+			}
+
+			expected := "rn1qkbnr/ppp1pppp/3p4/6B1/6b1/3P1N2/PPP1PPPP/RN1QKB1R"
+			result := b.Debug(board.FenMode)
+
+			if result != expected {
+				t.Errorf("result: %s, expected: %s", result, expected)
+			}
+		})
+
+		t.Run("whem moves knight black", func(t *testing.T) {
+			resultBool := b.Move(values.Coord{X: 6, Y: 0}, values.Coord{X: 5, Y: 2})
+
+			if resultBool != expectedBool {
+				t.Errorf("result: %t, expected: %t", resultBool, expectedBool)
+			}
+
+			expected := "rn1qkb1r/ppp1pppp/3p1n2/6B1/6b1/3P1N2/PPP1PPPP/RN1QKB1R"
+			result := b.Debug(board.FenMode)
+
+			if result != expected {
+				t.Errorf("result: %s, expected: %s", result, expected)
+			}
+		})
+
+		fmt.Println(b.Debug(board.GraphicalMode))
 	})
 
 	t.Run("when is invalid move", func(t *testing.T) {
