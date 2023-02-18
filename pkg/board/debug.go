@@ -19,10 +19,10 @@ func (b *Board) Debug(mode int) string {
 }
 
 func (b *Board) grafical() (result string) {
-	for i := 0; i < 8; i++ {
+	for i := 0; i < sizeOfBoard; i++ {
 		line := ""
 
-		for j := 0; j < 8; j++ {
+		for j := 0; j < sizeOfBoard; j++ {
 			if b.rows[i][j] != nil {
 				line += string(b.rows[i][j].Show())
 			} else {

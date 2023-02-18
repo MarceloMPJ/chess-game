@@ -1,23 +1,67 @@
 package board
 
 import (
+	"fmt"
+
 	"github.com/MarceloMPJ/chess-game/libs/basic"
 	"github.com/MarceloMPJ/chess-game/libs/values"
 	"github.com/MarceloMPJ/chess-game/pkg/piece"
+	"github.com/MarceloMPJ/chess-game/pkg/piece/pawn"
 )
 
+const sizeOfBoard = 8
+
 func (b *Board) Move(origin, dest values.Coord) bool {
+	if isInsideBoard(origin) || isInsideBoard(dest) {
+		return false
+	}
+
 	p := b.rows[origin.Y][origin.X]
+	pTarget := b.rows[dest.Y][dest.X]
 
-	if b.allowMove(origin, dest, p) {
-		b.rows[origin.Y][origin.X] = nil
-		b.rows[dest.Y][dest.X] = p
-		b.nextTurn()
+	if p == nil {
+		return false
+	}
 
-		return true
+	if pTarget == nil {
+		return b.move(origin, dest, p)
+	}
+
+	if b.pieceColor(origin) != b.pieceColor(dest) {
+		return b.capture(origin, dest, p)
 	}
 
 	return false
+}
+
+func (b *Board) move(origin, dest values.Coord, p piece.PieceContract) bool {
+	if !b.allowMove(origin, dest, p) {
+		return false
+	}
+
+	b.moveTo(origin, dest, p)
+
+	return true
+}
+
+func (b *Board) capture(origin, dest values.Coord, p piece.PieceContract) bool {
+	if b.isPawn(origin) && !p.(*pawn.Pawn).IsValidCapture(origin, dest) {
+		return false
+	}
+
+	if !b.isPawn(origin) && !b.allowMove(origin, dest, p) {
+		return false
+	}
+
+	b.moveTo(origin, dest, p)
+
+	return true
+}
+
+func (b *Board) moveTo(origin, dest values.Coord, p piece.PieceContract) {
+	b.rows[origin.Y][origin.X] = nil
+	b.rows[dest.Y][dest.X] = p
+	b.nextTurn()
 }
 
 func (b *Board) nextTurn() {
@@ -31,6 +75,8 @@ func (b *Board) nextTurn() {
 }
 
 func (b *Board) allowMove(origin, dest values.Coord, p piece.PieceContract) bool {
+	fmt.Println(b.isCorrectTurn(origin), p.IsValidMove(origin, dest), b.isFreePath(origin, dest, p))
+
 	return b.isCorrectTurn(origin) && p.IsValidMove(origin, dest) && b.isFreePath(origin, dest, p)
 }
 
@@ -46,7 +92,7 @@ func (b *Board) isFreePath(origin, dest values.Coord, p piece.PieceContract) boo
 
 		for i := startY; i <= finishY; i++ {
 			for j := startX; j <= finishX; j++ {
-				if origin.Y == i && origin.X == j {
+				if (origin.Y == i && origin.X == j) || (dest.Y == i && dest.X == j) {
 					continue
 				}
 
@@ -58,7 +104,7 @@ func (b *Board) isFreePath(origin, dest values.Coord, p piece.PieceContract) boo
 	} else {
 		// When the path is horizontal
 		for i, j := origin.Y, origin.X; i != dest.Y && j != dest.X; i, j = nextStep(i, j, dest) {
-			if origin.Y == i && origin.X == j {
+			if (origin.Y == i && origin.X == j) || (dest.Y == i && dest.X == j) {
 				continue
 			}
 
@@ -73,6 +119,12 @@ func (b *Board) isFreePath(origin, dest values.Coord, p piece.PieceContract) boo
 
 func (b *Board) isCorrectTurn(origin values.Coord) bool {
 	return b.currentColor == b.pieceColor(origin)
+}
+
+func (b *Board) isPawn(origin values.Coord) bool {
+	fen := b.rows[origin.Y][origin.X].ShowFEN()
+
+	return fen == 'p' || fen == 'P'
 }
 
 func (b *Board) isKnight(origin values.Coord) bool {
@@ -111,4 +163,8 @@ func (b *Board) pieceColor(origin values.Coord) int {
 	}
 
 	return values.Black
+}
+
+func isInsideBoard(coord values.Coord) bool {
+	return coord.X >= sizeOfBoard || coord.Y >= sizeOfBoard
 }

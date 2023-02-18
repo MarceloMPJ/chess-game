@@ -46,7 +46,6 @@ func TestBoard_Move(t *testing.T) {
 		b := board.NewBoard()
 		b.Start()
 
-		// Moves pawn on initial board
 		t.Run("when moves pawn white on initial board", func(t *testing.T) {
 			expectedFen := "rnbqkbnr/pppppppp/8/8/8/3P4/PPP1PPPP/RNBQKBNR"
 
@@ -83,7 +82,7 @@ func TestBoard_Move(t *testing.T) {
 			checkMove(t, resultBool, expectedBool, resultFen, expectedFen)
 		})
 
-		t.Run("whem moves knight white", func(t *testing.T) {
+		t.Run("when moves knight white", func(t *testing.T) {
 			expectedFen := "rn1qkbnr/ppp1pppp/3p4/6B1/6b1/3P1N2/PPP1PPPP/RN1QKB1R"
 
 			resultBool := b.Move(values.Coord{X: 6, Y: 7}, values.Coord{X: 5, Y: 5})
@@ -100,17 +99,52 @@ func TestBoard_Move(t *testing.T) {
 
 			checkMove(t, resultBool, expectedBool, resultFen, expectedFen)
 		})
+
+		t.Run("when bishop white captures knight black", func(t *testing.T) {
+			expectedFen := "rn1qkb1r/ppp1pppp/3p1B2/8/6b1/3P1N2/PPP1PPPP/RN1QKB1R"
+
+			resultBool := b.Move(values.Coord{X: 6, Y: 3}, values.Coord{X: 5, Y: 2})
+			resultFen := b.Debug(board.FenMode)
+
+			checkMove(t, resultBool, expectedBool, resultFen, expectedFen)
+		})
+
+		t.Run("when bishop black captures knight white", func(t *testing.T) {
+			expectedFen := "rn1qkb1r/ppp1pppp/3p1B2/8/8/3P1b2/PPP1PPPP/RN1QKB1R"
+
+			resultBool := b.Move(values.Coord{X: 6, Y: 4}, values.Coord{X: 5, Y: 5})
+			resultFen := b.Debug(board.FenMode)
+
+			checkMove(t, resultBool, expectedBool, resultFen, expectedFen)
+		})
+
+		t.Run("when pawn black captures bishop white", func(t *testing.T) {
+			expectedFen := "rn1qkb1r/ppp2ppp/3p1p2/8/8/3P1b2/PPP1PPPP/RN1QKB1R"
+
+			resultBool := b.Move(values.Coord{X: 4, Y: 1}, values.Coord{X: 5, Y: 2})
+			resultFen := b.Debug(board.FenMode)
+
+			checkMove(t, resultBool, expectedBool, resultFen, expectedFen)
+		})
+
+		t.Run("when pawn white captures bishop black", func(t *testing.T) {
+			expectedFen := "rn1qkb1r/ppp2ppp/3p1p2/8/8/3P1P2/PPP1PP1P/RN1QKB1R"
+
+			resultBool := b.Move(values.Coord{X: 6, Y: 6}, values.Coord{X: 5, Y: 5})
+			resultFen := b.Debug(board.FenMode)
+
+			checkMove(t, resultBool, expectedBool, resultFen, expectedFen)
+		})
 	})
 
 	t.Run("when is invalid move", func(t *testing.T) {
 		expectedBool := false
 		expectedFen := "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR"
 
-		t.Run("when has pieces between path and piece selected isn't knight", func(t *testing.T) {
-			b := board.NewBoard()
-			b.Start()
+		b := board.NewBoard()
+		b.Start()
 
-			// Moves rook on initial board
+		t.Run("when has pieces between path and piece selected isn't knight", func(t *testing.T) {
 			t.Run("when move rook on initial board", func(t *testing.T) {
 				resultBool := b.Move(values.Coord{X: 0, Y: 7}, values.Coord{X: 0, Y: 5})
 				resultFen := b.Debug(board.FenMode)
@@ -120,6 +154,22 @@ func TestBoard_Move(t *testing.T) {
 
 			t.Run("when move bishop on initial board", func(t *testing.T) {
 				resultBool := b.Move(values.Coord{X: 2, Y: 7}, values.Coord{X: 6, Y: 3})
+				resultFen := b.Debug(board.FenMode)
+
+				checkMove(t, resultBool, expectedBool, resultFen, expectedFen)
+			})
+		})
+
+		t.Run("when origin is empty", func(t *testing.T) {
+			resultBool := b.Move(values.Coord{X: 3, Y: 3}, values.Coord{X: 6, Y: 3})
+			resultFen := b.Debug(board.FenMode)
+
+			checkMove(t, resultBool, expectedBool, resultFen, expectedFen)
+		})
+
+		t.Run("when dest is out of board", func(t *testing.T) {
+			t.Run("when move rook on initial board", func(t *testing.T) {
+				resultBool := b.Move(values.Coord{X: 7, Y: 7}, values.Coord{X: 8, Y: 7})
 				resultFen := b.Debug(board.FenMode)
 
 				checkMove(t, resultBool, expectedBool, resultFen, expectedFen)

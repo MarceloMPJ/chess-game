@@ -12,7 +12,7 @@ import (
 )
 
 type Board struct {
-	rows         [8][8]piece.PieceContract
+	rows         [sizeOfBoard][sizeOfBoard]piece.PieceContract
 	currentColor int
 }
 
@@ -21,7 +21,7 @@ func NewBoard() Board {
 }
 
 func (b *Board) Start() {
-	var rows [8][8]piece.PieceContract
+	var rows [sizeOfBoard][sizeOfBoard]piece.PieceContract
 
 	// Rooks
 	rookWhiteL := rook.NewRook(values.White)
@@ -49,7 +49,7 @@ func (b *Board) Start() {
 	queenWhite := queen.NewQueen(values.White)
 	queenBlack := queen.NewQueen(values.Black)
 
-	rows[0] = [8]piece.PieceContract{
+	rows[0] = [sizeOfBoard]piece.PieceContract{
 		&rookBlackL,
 		&knightBlackL,
 		&bishopBlackL,
@@ -60,7 +60,7 @@ func (b *Board) Start() {
 		&rookBlackR,
 	}
 
-	rows[7] = [8]piece.PieceContract{
+	rows[7] = [sizeOfBoard]piece.PieceContract{
 		&rookWhiteL,
 		&knightWhiteL,
 		&bishopWhiteL,
@@ -71,7 +71,7 @@ func (b *Board) Start() {
 		&rookWhiteR,
 	}
 
-	for i := 0; i < 8; i++ {
+	for i := 0; i < sizeOfBoard; i++ {
 		pawnWhite := pawn.NewPawn(values.White)
 		pawnBlack := pawn.NewPawn(values.Black)
 
