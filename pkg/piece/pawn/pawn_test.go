@@ -177,6 +177,112 @@ func TestPawn_IsValidMove(t *testing.T) {
 	}
 }
 
+func TestPawn_IsValidCapture(t *testing.T) {
+	type params struct {
+		origin values.Coord
+		dest   values.Coord
+	}
+
+	type context struct {
+		context  string
+		expected bool
+		args     []params
+	}
+
+	type contextColor struct {
+		contextColor string
+		color        int
+		contexts     []context
+	}
+
+	tests := []contextColor{
+		{
+			contextColor: "when color is white",
+			color:        values.White,
+			contexts: []context{
+				{
+					context:  "when the move is valid",
+					expected: true,
+					args: []params{
+						{
+							values.Coord{X: 7, Y: 6},
+							values.Coord{X: 6, Y: 5},
+						},
+						{
+							values.Coord{X: 6, Y: 6},
+							values.Coord{X: 7, Y: 5},
+						},
+					},
+				},
+				{
+					context:  "when the move is invalid",
+					expected: false,
+					args: []params{
+						{
+							values.Coord{X: 6, Y: 5},
+							values.Coord{X: 7, Y: 6},
+						},
+						{
+							values.Coord{X: 7, Y: 5},
+							values.Coord{X: 6, Y: 6},
+						},
+					},
+				},
+			},
+		},
+		{
+			contextColor: "when color is black",
+			color:        values.Black,
+			contexts: []context{
+				{
+					context:  "when the move is valid",
+					expected: true,
+					args: []params{
+						{
+							values.Coord{X: 6, Y: 5},
+							values.Coord{X: 7, Y: 6},
+						},
+						{
+							values.Coord{X: 7, Y: 5},
+							values.Coord{X: 6, Y: 6},
+						},
+					},
+				},
+				{
+					context:  "when the move is invalid",
+					expected: false,
+					args: []params{
+						{
+							values.Coord{X: 7, Y: 6},
+							values.Coord{X: 6, Y: 5},
+						},
+						{
+							values.Coord{X: 6, Y: 6},
+							values.Coord{X: 7, Y: 5},
+						},
+					},
+				},
+			},
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.contextColor, func(t *testing.T) {
+			p := pawn.NewPawn(test.color)
+
+			for _, testContext := range test.contexts {
+				t.Run(testContext.context, func(t *testing.T) {
+					for _, arg := range testContext.args {
+						result := p.IsValidCapture(arg.origin, arg.dest)
+
+						checkResult(t, result, testContext.expected)
+					}
+				})
+			}
+		})
+	}
+}
+
 func checkResult(t *testing.T, result, expected bool) {
 	t.Helper()
 

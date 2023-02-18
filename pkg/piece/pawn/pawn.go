@@ -37,6 +37,14 @@ func (p *Pawn) IsValidMove(origin, dest values.Coord) bool {
 	return p.checkValidSteps(origin, p.steps(origin, dest))
 }
 
+func (p *Pawn) IsValidCapture(origin, dest values.Coord) bool {
+	if !(dest.X == origin.X+1 || dest.X == origin.X-1) {
+		return false
+	}
+
+	return p.steps(origin, dest) == 1
+}
+
 func (p *Pawn) steps(origin, dest values.Coord) uint8 {
 	var steps uint8
 
