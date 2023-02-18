@@ -83,12 +83,12 @@ func TestPawn_IsValidMove(t *testing.T) {
 					expected: true,
 					args: []params{
 						{
-							values.Coord{X: 7, Y: 7},
 							values.Coord{X: 7, Y: 6},
+							values.Coord{X: 7, Y: 5},
 						},
 						{
-							values.Coord{X: 7, Y: 7},
-							values.Coord{X: 7, Y: 5},
+							values.Coord{X: 7, Y: 6},
+							values.Coord{X: 7, Y: 4},
 						},
 					},
 				},
@@ -101,8 +101,12 @@ func TestPawn_IsValidMove(t *testing.T) {
 							values.Coord{X: 6, Y: 6},
 						},
 						{
-							values.Coord{X: 7, Y: 7},
-							values.Coord{X: 7, Y: 4},
+							values.Coord{X: 7, Y: 6},
+							values.Coord{X: 7, Y: 3},
+						},
+						{
+							values.Coord{X: 7, Y: 5},
+							values.Coord{X: 7, Y: 3},
 						},
 						{
 							values.Coord{X: 6, Y: 6},
@@ -125,8 +129,8 @@ func TestPawn_IsValidMove(t *testing.T) {
 							values.Coord{X: 7, Y: 7},
 						},
 						{
-							values.Coord{X: 7, Y: 5},
-							values.Coord{X: 7, Y: 7},
+							values.Coord{X: 7, Y: 1},
+							values.Coord{X: 7, Y: 3},
 						},
 					},
 				},
@@ -139,8 +143,12 @@ func TestPawn_IsValidMove(t *testing.T) {
 							values.Coord{X: 7, Y: 7},
 						},
 						{
+							values.Coord{X: 7, Y: 1},
 							values.Coord{X: 7, Y: 4},
-							values.Coord{X: 7, Y: 7},
+						},
+						{
+							values.Coord{X: 7, Y: 2},
+							values.Coord{X: 7, Y: 4},
 						},
 						{
 							values.Coord{X: 6, Y: 7},

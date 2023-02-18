@@ -6,6 +6,9 @@ type Pawn struct {
 	color int
 }
 
+const initialYBoardWhite = 6
+const initialYBoardBlack = 1
+
 func NewPawn(color int) Pawn {
 	return Pawn{color}
 }
@@ -31,11 +34,33 @@ func (p *Pawn) IsValidMove(origin, dest values.Coord) bool {
 		return false
 	}
 
-	if p.color == values.White && origin.Y > dest.Y && (origin.Y-dest.Y == 1 || (origin.Y-dest.Y == 2)) {
+	return p.checkValidSteps(origin, p.steps(origin, dest))
+}
+
+func (p *Pawn) steps(origin, dest values.Coord) uint8 {
+	var steps uint8
+
+	if p.color == values.White && origin.Y > dest.Y {
+		steps = origin.Y - dest.Y
+	}
+
+	if p.color == values.Black && dest.Y > origin.Y {
+		steps = dest.Y - origin.Y
+	}
+
+	return steps
+}
+
+func (p *Pawn) checkValidSteps(origin values.Coord, steps uint8) bool {
+	if steps == 1 {
 		return true
 	}
 
-	if p.color == values.Black && dest.Y > origin.Y && (dest.Y-origin.Y == 1 || (dest.Y-origin.Y == 2)) {
+	if p.color == values.White && origin.Y == initialYBoardWhite && steps == 2 {
+		return true
+	}
+
+	if p.color == values.Black && origin.Y == initialYBoardBlack && steps == 2 {
 		return true
 	}
 
