@@ -118,8 +118,17 @@ func TestBoard_Move(t *testing.T) {
 			checkMove(t, resultBool, expectedBool, resultFen, expectedFen)
 		})
 
+		t.Run("when pawn white captures bishop black", func(t *testing.T) {
+			expectedFen := "rn1qkb1r/ppp1pppp/3p1B2/8/8/3P1P2/PPP1PP1P/RN1QKB1R"
+
+			resultBool := b.Move(values.Coord{X: 6, Y: 6}, values.Coord{X: 5, Y: 5})
+			resultFen := b.Debug(board.FenMode)
+
+			checkMove(t, resultBool, expectedBool, resultFen, expectedFen)
+		})
+
 		t.Run("when pawn black captures bishop white", func(t *testing.T) {
-			expectedFen := "rn1qkb1r/ppp2ppp/3p1p2/8/8/3P1b2/PPP1PPPP/RN1QKB1R"
+			expectedFen := "rn1qkb1r/ppp2ppp/3p1p2/8/8/3P1P2/PPP1PP1P/RN1QKB1R"
 
 			resultBool := b.Move(values.Coord{X: 4, Y: 1}, values.Coord{X: 5, Y: 2})
 			resultFen := b.Debug(board.FenMode)
@@ -127,10 +136,16 @@ func TestBoard_Move(t *testing.T) {
 			checkMove(t, resultBool, expectedBool, resultFen, expectedFen)
 		})
 
-		t.Run("when pawn white captures bishop black", func(t *testing.T) {
-			expectedFen := "rn1qkb1r/ppp2ppp/3p1p2/8/8/3P1P2/PPP1PP1P/RN1QKB1R"
+		t.Run("when pawn white captures pawn black en passant", func(t *testing.T) {
+			expectedFen := "rn1qkb1r/1pp2ppp/3p1p2/8/7P/1p1P1P2/P1P1PP2/RN1QKB1R"
 
-			resultBool := b.Move(values.Coord{X: 6, Y: 6}, values.Coord{X: 5, Y: 5})
+			b.Move(values.Coord{X: 7, Y: 6}, values.Coord{X: 7, Y: 5})
+			b.Move(values.Coord{X: 0, Y: 1}, values.Coord{X: 0, Y: 3})
+			b.Move(values.Coord{X: 7, Y: 5}, values.Coord{X: 7, Y: 4})
+			b.Move(values.Coord{X: 0, Y: 3}, values.Coord{X: 0, Y: 4})
+			b.Move(values.Coord{X: 1, Y: 6}, values.Coord{X: 1, Y: 4})
+
+			resultBool := b.Move(values.Coord{X: 0, Y: 4}, values.Coord{X: 1, Y: 5})
 			resultFen := b.Debug(board.FenMode)
 
 			checkMove(t, resultBool, expectedBool, resultFen, expectedFen)

@@ -14,10 +14,11 @@ import (
 type Board struct {
 	rows         [sizeOfBoard][sizeOfBoard]piece.PieceContract
 	currentColor int
+	enPassant    *values.Coord
 }
 
 func NewBoard() Board {
-	return Board{}
+	return Board{currentColor: values.White}
 }
 
 func (b *Board) Start() {

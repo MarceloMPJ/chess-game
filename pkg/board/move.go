@@ -1,8 +1,6 @@
 package board
 
 import (
-	"fmt"
-
 	"github.com/MarceloMPJ/chess-game/libs/basic"
 	"github.com/MarceloMPJ/chess-game/libs/values"
 	"github.com/MarceloMPJ/chess-game/pkg/piece"
@@ -23,15 +21,19 @@ func (b *Board) Move(origin, dest values.Coord) bool {
 		return false
 	}
 
-	if pTarget == nil {
-		return b.move(origin, dest, p)
-	}
-
-	if b.pieceColor(origin) != b.pieceColor(dest) {
+	if b.isValidEnPassant(origin, dest) {
 		return b.capture(origin, dest, p)
 	}
 
-	return false
+	if pTarget != nil {
+		if b.pieceColor(origin) != b.pieceColor(dest) {
+			return b.capture(origin, dest, p)
+		}
+
+		return false
+	}
+
+	return b.move(origin, dest, p)
 }
 
 func (b *Board) move(origin, dest values.Coord, p piece.PieceContract) bool {
@@ -39,13 +41,14 @@ func (b *Board) move(origin, dest values.Coord, p piece.PieceContract) bool {
 		return false
 	}
 
+	b.setEnPassant(origin, dest)
 	b.moveTo(origin, dest, p)
 
 	return true
 }
 
 func (b *Board) capture(origin, dest values.Coord, p piece.PieceContract) bool {
-	if b.isPawn(origin) && !p.(*pawn.Pawn).IsValidCapture(origin, dest) {
+	if b.isPawn(origin) && (!p.(*pawn.Pawn).IsValidCapture(origin, dest) || !b.isCorrectTurn(origin)) {
 		return false
 	}
 
@@ -54,14 +57,49 @@ func (b *Board) capture(origin, dest values.Coord, p piece.PieceContract) bool {
 	}
 
 	b.moveTo(origin, dest, p)
+	b.resetEnPassant()
 
 	return true
 }
 
 func (b *Board) moveTo(origin, dest values.Coord, p piece.PieceContract) {
-	b.rows[origin.Y][origin.X] = nil
 	b.rows[dest.Y][dest.X] = p
+
+	if b.isValidEnPassant(origin, dest) {
+		b.rows[origin.Y][dest.X] = nil
+	}
+	b.rows[origin.Y][origin.X] = nil
 	b.nextTurn()
+}
+
+func (b *Board) isValidEnPassant(origin, dest values.Coord) bool {
+	return b.isPawn(origin) && b.enPassant != nil && (dest.Y == b.enPassant.Y && dest.X == b.enPassant.X)
+}
+
+func (b *Board) setEnPassant(origin, dest values.Coord) {
+	ymin, ymax := basic.MinUint8(origin.Y, dest.Y), basic.MaxUint8(origin.Y, dest.Y)
+
+	var coord values.Coord
+
+	if b.isPawn(origin) && ymax-ymin == 2 {
+		coord.X = origin.X
+
+		if origin.Y > dest.Y {
+			coord.Y = origin.Y - 1
+		} else {
+			coord.Y = origin.Y + 1
+		}
+
+		b.enPassant = &coord
+
+		return
+	}
+
+	b.enPassant = nil
+}
+
+func (b *Board) resetEnPassant() {
+	b.enPassant = nil
 }
 
 func (b *Board) nextTurn() {
@@ -75,8 +113,6 @@ func (b *Board) nextTurn() {
 }
 
 func (b *Board) allowMove(origin, dest values.Coord, p piece.PieceContract) bool {
-	fmt.Println(b.isCorrectTurn(origin), p.IsValidMove(origin, dest), b.isFreePath(origin, dest, p))
-
 	return b.isCorrectTurn(origin) && p.IsValidMove(origin, dest) && b.isFreePath(origin, dest, p)
 }
 
@@ -122,13 +158,25 @@ func (b *Board) isCorrectTurn(origin values.Coord) bool {
 }
 
 func (b *Board) isPawn(origin values.Coord) bool {
-	fen := b.rows[origin.Y][origin.X].ShowFEN()
+	p := b.rows[origin.Y][origin.X]
+
+	if p == nil {
+		return false
+	}
+
+	fen := p.ShowFEN()
 
 	return fen == 'p' || fen == 'P'
 }
 
 func (b *Board) isKnight(origin values.Coord) bool {
-	fen := b.rows[origin.Y][origin.X].ShowFEN()
+	p := b.rows[origin.Y][origin.X]
+
+	if p == nil {
+		return false
+	}
+
+	fen := p.ShowFEN()
 
 	return fen == 'n' || fen == 'N'
 }
@@ -156,9 +204,15 @@ func nextStep(i, j uint8, dest values.Coord) (uint8, uint8) {
 }
 
 func (b *Board) pieceColor(origin values.Coord) int {
-	fen := b.rows[origin.Y][origin.X].ShowFEN()
+	p := b.rows[origin.Y][origin.X]
 
-	if fen < 'Z' {
+	if p == nil {
+		return -1
+	}
+
+	fen := p.ShowFEN()
+
+	if fen > 'A' && fen < 'Z' {
 		return values.White
 	}
 
