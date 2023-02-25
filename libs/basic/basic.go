@@ -1,5 +1,13 @@
 package basic
 
+func IsNumber(r rune) bool {
+	return r >= '0' && r <= '9'
+}
+
+func RuneToInt(r rune) int {
+	return int(r - '0')
+}
+
 func Abs(num int) int {
 	if num < 0 {
 		return -num
