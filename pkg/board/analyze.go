@@ -7,7 +7,8 @@ import (
 )
 
 func (b *Board) allowMove(origin, dest values.Coord, p piece.PieceContract) bool {
-	return b.isCorrectTurn(origin) && p.IsValidMove(origin, dest) && b.isFreePath(origin, dest)
+	return b.isCorrectTurn(origin) && p.IsValidMove(origin, dest) &&
+		b.isFreePath(origin, dest) && (!b.isKing(origin) || !b.isAttacked(dest))
 }
 
 func (b *Board) isValidEnPassant(origin, dest values.Coord) bool {
