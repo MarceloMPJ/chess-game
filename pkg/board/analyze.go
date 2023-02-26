@@ -258,17 +258,6 @@ func (b *Board) isAttackedByBishopOrQueen(origin values.Coord, targetColor int) 
 }
 
 func (b *Board) isAttackedByKnight(origin values.Coord, targetColor int) bool {
-	knightMoves := [8]values.Move{
-		{X: -2, Y: -1},
-		{X: -1, Y: -2},
-		{X: -2, Y: 1},
-		{X: 1, Y: -2},
-		{X: -1, Y: 2},
-		{X: 2, Y: -1},
-		{X: 1, Y: 2},
-		{X: 2, Y: 1},
-	}
-
 	for _, move := range knightMoves {
 		currentX, currentY := int(origin.X)+move.X, int(origin.Y)+move.Y
 		currentCoord := values.Coord{X: uint8(currentX), Y: uint8(currentY)}
@@ -324,17 +313,6 @@ func (b *Board) isAttackedByPawn(origin values.Coord, targetColor int) bool {
 }
 
 func (b *Board) isAttackedByKing(origin values.Coord, targetColor int) bool {
-	kingMoves := [8]values.Move{
-		{X: -1, Y: -1},
-		{X: -1, Y: 0},
-		{X: -1, Y: 1},
-		{X: 0, Y: 1},
-		{X: 1, Y: 1},
-		{X: 1, Y: 0},
-		{X: 1, Y: -1},
-		{X: 0, Y: -1},
-	}
-
 	for _, move := range kingMoves {
 		currentX, currentY := int(origin.X)+move.X, int(origin.Y)+move.Y
 		currentCoord := values.Coord{X: uint8(currentX), Y: uint8(currentY)}

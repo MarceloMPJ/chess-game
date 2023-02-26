@@ -29,6 +29,28 @@ const (
 	castlingQueenSideX = 0
 )
 
+var kingMoves = [8]values.Move{
+	{X: -1, Y: -1},
+	{X: -1, Y: 0},
+	{X: -1, Y: 1},
+	{X: 0, Y: 1},
+	{X: 1, Y: 1},
+	{X: 1, Y: 0},
+	{X: 1, Y: -1},
+	{X: 0, Y: -1},
+}
+
+var knightMoves = [8]values.Move{
+	{X: -2, Y: -1},
+	{X: -1, Y: -2},
+	{X: -2, Y: 1},
+	{X: 1, Y: -2},
+	{X: -1, Y: 2},
+	{X: 2, Y: -1},
+	{X: 1, Y: 2},
+	{X: 2, Y: 1},
+}
+
 type Board struct {
 	rows               [sizeOfBoard][sizeOfBoard]piece.PieceContract
 	currentColor       int
