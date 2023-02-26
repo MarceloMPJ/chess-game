@@ -4,11 +4,30 @@ import (
 	"github.com/MarceloMPJ/chess-game/libs/basic"
 	"github.com/MarceloMPJ/chess-game/libs/values"
 	"github.com/MarceloMPJ/chess-game/pkg/piece"
+	"github.com/MarceloMPJ/chess-game/pkg/piece/pawn"
 )
 
 func (b *Board) allowMove(origin, dest values.Coord, p piece.PieceContract) bool {
 	return b.isCorrectTurn(origin) && p.IsValidMove(origin, dest) &&
-		b.isFreePath(origin, dest) && (!b.isKing(origin) || !b.isAttacked(dest))
+		b.isFreePath(origin, dest) && (!b.isKing(origin) || !b.isAttacked(dest)) && b.simulateMove(origin, dest)
+}
+
+func (b *Board) allowCaptureWithPawn(origin, dest values.Coord, p *pawn.Pawn) bool {
+	return p.IsValidCapture(origin, dest) && b.isCorrectTurn(origin) && b.simulateMove(origin, dest)
+}
+
+func (b *Board) simulateMove(origin, dest values.Coord) bool {
+	if b.isSimulatation {
+		return true
+	}
+
+	bclone := *b
+
+	bclone.isSimulatation = true
+	bclone.execMove(origin, dest)
+	bclone.nextTurn()
+
+	return !bclone.isKingAttacked(b.currentColor)
 }
 
 func (b *Board) isValidEnPassant(origin, dest values.Coord) bool {
@@ -102,6 +121,25 @@ func (b *Board) isFreePath(origin, dest values.Coord) bool {
 	}
 
 	return true
+}
+
+func (b *Board) isKingAttacked(targetColor int) bool {
+	coord := b.searchKing(targetColor)
+	return b.isAttacked(coord)
+}
+
+func (b *Board) searchKing(targetColor int) (currentCoord values.Coord) {
+	for i := uint8(0); i < sizeOfBoard; i++ {
+		for j := uint8(0); j < sizeOfBoard; j++ {
+			currentCoord = values.Coord{X: j, Y: i}
+
+			if b.pieceColor(currentCoord) == targetColor && b.isKing(currentCoord) {
+				return
+			}
+		}
+	}
+
+	return
 }
 
 func (b *Board) isAttacked(origin values.Coord) bool {

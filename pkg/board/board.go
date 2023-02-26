@@ -33,6 +33,9 @@ type Board struct {
 	rows               [sizeOfBoard][sizeOfBoard]piece.PieceContract
 	currentColor       int
 	enPassant          *values.Coord
+	isSimulatation     bool
+	checkWhite         bool
+	checkBlack         bool
 	castlingKingWhite  bool
 	castlingKingBlack  bool
 	castlingQueenWhite bool

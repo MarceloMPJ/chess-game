@@ -8,6 +8,10 @@ import (
 )
 
 func (b *Board) Move(origin, dest values.Coord) bool {
+	return b.execMove(origin, dest)
+}
+
+func (b *Board) execMove(origin, dest values.Coord) bool {
 	if isInsideBoard(origin) || isInsideBoard(dest) {
 		return false
 	}
@@ -55,7 +59,7 @@ func (b *Board) move(origin, dest values.Coord, p piece.PieceContract) bool {
 }
 
 func (b *Board) capture(origin, dest values.Coord, p piece.PieceContract) bool {
-	if b.isPawn(origin) && (!p.(*pawn.Pawn).IsValidCapture(origin, dest) || !b.isCorrectTurn(origin)) {
+	if b.isPawn(origin) && !b.allowCaptureWithPawn(origin, dest, p.(*pawn.Pawn)) {
 		return false
 	}
 
@@ -83,6 +87,7 @@ func (b *Board) castleKingSide(origin, dest values.Coord) bool {
 		b.rows[initialPositionKingWhiteY][initialPositionKingWhiteX] = nil
 		b.rows[initialPositionRookKingWhiteY][initialPositionRookKingWhiteX] = nil
 
+		b.setCheck(origin, dest)
 		b.nextTurn()
 
 		return true
@@ -96,6 +101,7 @@ func (b *Board) castleKingSide(origin, dest values.Coord) bool {
 	b.rows[initialPositionKingBlackY][initialPositionKingBlackX] = nil
 	b.rows[initialPositionRookKingBlackY][initialPositionRookKingBlackX] = nil
 
+	b.setCheck(origin, dest)
 	b.nextTurn()
 
 	return true
@@ -113,6 +119,7 @@ func (b *Board) castleQueenSide(origin, dest values.Coord) bool {
 		b.rows[initialPositionKingWhiteY][initialPositionKingWhiteX] = nil
 		b.rows[initialPositionRookQueenWhiteY][initialPositionRookQueenWhiteX] = nil
 
+		b.setCheck(origin, dest)
 		b.nextTurn()
 
 		return true
@@ -126,6 +133,7 @@ func (b *Board) castleQueenSide(origin, dest values.Coord) bool {
 	b.rows[initialPositionKingBlackY][initialPositionKingBlackX] = nil
 	b.rows[initialPositionRookQueenBlackY][initialPositionRookQueenBlackX] = nil
 
+	b.setCheck(origin, dest)
 	b.nextTurn()
 
 	return true
@@ -138,7 +146,25 @@ func (b *Board) moveTo(origin, dest values.Coord, p piece.PieceContract) {
 		b.rows[origin.Y][dest.X] = nil
 	}
 	b.rows[origin.Y][origin.X] = nil
+	b.setCheck(origin, dest)
 	b.nextTurn()
+}
+
+func (b *Board) setCheck(origin, dest values.Coord) {
+	targetColor := values.White
+	if b.currentColor == values.White {
+		targetColor = values.Black
+	}
+
+	if b.isKingAttacked(targetColor) {
+		if targetColor == values.White {
+			b.checkWhite = true
+
+			return
+		}
+
+		b.checkBlack = true
+	}
 }
 
 func (b *Board) setCastling(origin, dest values.Coord) {

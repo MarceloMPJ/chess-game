@@ -133,6 +133,16 @@ func TestBoard_Move(t *testing.T) {
 
 			checkMove(t, resultBool, expectedBool, resultFen, expectedFen)
 		})
+
+		t.Run("when white check the king black and black defends", func(t *testing.T) {
+			expectedFen := "Rnkr1b1r/1ppq1ppp/3p1p2/8/7P/1P1P1P2/2P1PPB1/1N1Q1RK1"
+
+			b.Move(values.Coord{X: 0, Y: 7}, values.Coord{X: 0, Y: 0}) // Check!
+			resultBool := b.Move(values.Coord{X: 2, Y: 2}, values.Coord{X: 1, Y: 0})
+			resultFen := b.Debug(board.FenMode)
+
+			checkMove(t, resultBool, expectedBool, resultFen, expectedFen)
+		})
 	})
 
 	t.Run("when is invalid move", func(t *testing.T) {
