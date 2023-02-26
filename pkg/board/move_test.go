@@ -104,7 +104,7 @@ func TestBoard_Move(t *testing.T) {
 			checkMove(t, resultBool, expectedBool, resultFen, expectedFen)
 		})
 
-		t.Run("when pawn white captures pawn black en passant", func(t *testing.T) {
+		t.Run("when pawn black captures pawn white en passant", func(t *testing.T) {
 			expectedFen := "rn1qkb1r/1pp2ppp/3p1p2/8/7P/1p1P1P2/P1P1PP2/RN1QKB1R"
 
 			b.Move(values.Coord{X: 7, Y: 6}, values.Coord{X: 7, Y: 5})
@@ -114,6 +114,21 @@ func TestBoard_Move(t *testing.T) {
 			b.Move(values.Coord{X: 1, Y: 6}, values.Coord{X: 1, Y: 4})
 
 			resultBool := b.Move(values.Coord{X: 0, Y: 4}, values.Coord{X: 1, Y: 5})
+			resultFen := b.Debug(board.FenMode)
+
+			checkMove(t, resultBool, expectedBool, resultFen, expectedFen)
+		})
+
+		t.Run("when white has castled kingside and black has castled queenside", func(t *testing.T) {
+			expectedFen := "2kr1b1r/1ppq1ppp/2np1p2/8/7P/1P1P1P2/2P1PPB1/RN1Q1RK1"
+
+			b.Move(values.Coord{X: 5, Y: 7}, values.Coord{X: 6, Y: 6})
+			b.Move(values.Coord{X: 3, Y: 0}, values.Coord{X: 3, Y: 1})
+			b.Move(values.Coord{X: 4, Y: 7}, values.Coord{X: 6, Y: 7}) // White Castle
+			b.Move(values.Coord{X: 1, Y: 0}, values.Coord{X: 2, Y: 2})
+			b.Move(values.Coord{X: 0, Y: 6}, values.Coord{X: 1, Y: 5})
+
+			resultBool := b.Move(values.Coord{X: 4, Y: 0}, values.Coord{X: 2, Y: 0}) // Black Castle
 			resultFen := b.Debug(board.FenMode)
 
 			checkMove(t, resultBool, expectedBool, resultFen, expectedFen)

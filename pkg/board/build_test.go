@@ -1,7 +1,6 @@
 package board_test
 
 import (
-	"fmt"
 	"testing"
 
 	"github.com/MarceloMPJ/chess-game/pkg/board"
@@ -31,8 +30,6 @@ func TestBoard_Build(t *testing.T) {
 	for _, fen := range gamesFEN {
 		b := board.Build(fen)
 		result := b.Debug(board.FenMode)
-
-		fmt.Println(b.Debug(board.GraphicalMode))
 
 		if result != fen {
 			t.Errorf("result: %s, expected: %s", result, fen)
